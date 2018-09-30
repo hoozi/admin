@@ -1,9 +1,12 @@
-import Vue from 'vue'
-import App from '@/layouts/BasicLayout';
-import router from './router'
-import store from './store'
+import Vue from 'vue';
+import { sync } from 'vuex-router-sync';
+import App from './App';
+import router from './router/index';
+import store from './store/index';
 import './plugins/element.js';
-import '@/styles/reset.scss';
+import '@/styles/index.scss';
+
+sync(store, router);
 
 Vue.config.productionTip = false
 

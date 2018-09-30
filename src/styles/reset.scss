@@ -21,7 +21,7 @@ section,
 summary {
   display: block;
 }
-html, body, #app {
+html, body, #app, #root {
   @extend %full;
 }
 
