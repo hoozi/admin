@@ -14,6 +14,7 @@
   import AppFooter from './Footer';
   import AppContent from './Content';
   import AppSiderBar from './SiderBar';
+  import { formatterRoute } from '@/utils/formatterMenuOrRoute';
   export default {
     components: {
       AppHeader,
@@ -21,11 +22,7 @@
       AppSiderBar,
       AppFooter
     },
-    name: 'BasicLayout',
-    mounted() {
-      this.$store.dispatch('user/getUserMenu');
-      this.$store.dispatch('user/getCurrentUser');
-    }
+    name: 'BasicLayout'
   }
 </script>
 

@@ -20,7 +20,6 @@
     },
     methods: {
       handleMenuToggle() {
-        console.log(this.$route)
         this.$store.commit('toggleMenu');
       }
     }

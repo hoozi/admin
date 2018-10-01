@@ -1,17 +1,18 @@
 import {
   login,
-  logout,
+  //logout,
   queryCurrentUser,
   queryUserMenu
 } from '@/services/user';
 import { setToken, removeToken } from '@/utils/token';
-import formatterMenu from '@/utils/formatterMenu';
+import { formatterMenu } from '@/utils/formatterMenuOrRoute';
 import router from '@/router/index';
 
 const state = {
   permissions: [],
   userInfo: {},
   userMenu: [],
+  routes: [],
   token: ''
 }
 
@@ -48,7 +49,7 @@ const mutations = {
 }
 
 const actions = {
-  async login({ dispatch, commit }, payload) {
+  async login({ commit }, payload) {
     const response = await login(payload);
     if(response.access_token) {
       commit(SAVE_TOKEN, response.access_token);
@@ -61,10 +62,11 @@ const actions = {
       commit(SAVE_USER, response.data);
     }
   },
-  async getUserMenu({ commit }) {
+  async getUserMenu({ commit, state }, callback) {
     const response = await queryUserMenu();
     if(response.length > 0) {
       commit('SAVE_USER_MENU', response);
+      callback && callback(state, response);
     }
   },
   logout({ commit, rootState }) {

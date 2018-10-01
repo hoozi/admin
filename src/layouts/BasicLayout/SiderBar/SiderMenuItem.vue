@@ -1,7 +1,7 @@
 <template>
   <el-submenu v-if="menu.children.length > 0" :index="Date.now()+''">
     <template slot="title">
-      <!-- <i class="el-icon-location"></i> -->
+      <icon :type="menu.icon"/>
       <span>{{menu.label}}</span>
     </template>
     <item v-for="submenu in menu.children" :menu="submenu" :key="submenu.path"/>
@@ -23,7 +23,9 @@
     props: {
       menu: {
         type: Object,
-        default: []
+        default(){
+          return [];
+        }
       }
     },
     methods: {

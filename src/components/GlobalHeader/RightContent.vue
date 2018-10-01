@@ -30,6 +30,9 @@
     components: {
       Icon
     },
+    created() {
+      this.$store.dispatch('user/getCurrentUser');
+    },
     computed: {
       ...mapGetters('user', ['username'])
     },

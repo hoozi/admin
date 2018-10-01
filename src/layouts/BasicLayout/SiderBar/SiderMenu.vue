@@ -5,7 +5,7 @@
     active-text-color="#409EFF" 
     router 
     :collapse-transition="false" 
-    :collapse="collapsed"
+    :collapse="collapse"
     :default-active="$route.path"
     unique-opened
     class="sider-menu"
@@ -25,9 +25,7 @@
     name: 'AppSiderMenu',
     components: { SiderMenuItem },
     computed: {
-      collapsed() {
-        return this.$store.state.collapse;
-      },
+      ...mapGetters(['collapse']),
       ...mapGetters('user', ['menus'])
     }
   }

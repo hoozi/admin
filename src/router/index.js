@@ -1,56 +1,32 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import About from './About';
-import Home from './Home';
-import Login from '@/pages/Login';
-import BasicLayout from '@/layouts/BasicLayout';
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 import { getToken } from '@/utils/token';
+/* import store from '@/store';
+import { formatterRoute } from '@/utils/formatterMenuOrRoute'; */
 
 NProgress.configure({ showSpinner: false });
 
-Vue.use(Router)
+Vue.use(Router);
 
-const routes = [
-  { 
-    path: '/', 
-    component: BasicLayout,
-    redirect: '/home', 
-    children: [
-      { 
-        name: 'about',
-        path: '/about', 
-        component: () => import('./About.vue'),
-        meta: {
-          title: '关于'
-        },
-        children: [
-          {
-            name: 'us',
-            path: 'us',
-            component: () => import('./Home.vue'),
-            meta: {
-              title:'我们'
-            }
-          }
-        ]
-      },
-      { 
-        name: 'home',
-        path: '/home', 
-        component: () => import('./Home.vue'),
-        meta: {
-          title: '首页'
-        }
-      }
-    ]
-  },
-  
+export const initialRoutes = [
+  {
+    path: '/',
+    component: () => import('@/layouts/BasicLayout'),
+    name: 'layout',
+    children: []
+  }
 ]
 
 const router = new Router({
-  routes
+  routes: [
+    {
+      name: 'login',
+      path: '/login',
+      component: () => import('@/pages/Login')
+    }
+  ]
 })
 
 router.beforeEach((to, from, next) => {
@@ -61,7 +37,7 @@ router.beforeEach((to, from, next) => {
 
     // 已经登录的情况下,阻止再跳转到登录页
     if(to.path == '/login') {
-      next({ path: '/' });
+      next({ path: '/', replace: true });
       NProgress.done();
     } else {
       next();
