@@ -67,7 +67,7 @@
     &.is-opened {
       &>.el-submenu__title {
         color: #fff !important;
-        .el-submenu__icon-arrow {
+        .el-submenu__icon-arrow, i {
           color: #fff
         }
       }

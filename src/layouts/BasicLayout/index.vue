@@ -14,7 +14,6 @@
   import AppFooter from './Footer';
   import AppContent from './Content';
   import AppSiderBar from './SiderBar';
-  import { formatterRoute } from '@/utils/formatterMenuOrRoute';
   export default {
     components: {
       AppHeader,
@@ -22,7 +21,10 @@
       AppSiderBar,
       AppFooter
     },
-    name: 'BasicLayout'
+    name: 'BasicLayout',
+    created() {
+      //this.$store.dispatch('user/getUserMenu');
+    }
   }
 </script>
 
@@ -36,7 +38,7 @@
     #{&}-header {
       background: #fff;
       box-shadow: 0 1px 4px rgba(0,21,41,.08);
-      height: 64px;
+      height: 50px;
       padding: 0 12px 0 0;
       position: relative;
     }

@@ -5,8 +5,9 @@ import {
   queryUserMenu
 } from '@/services/user';
 import { setToken, removeToken } from '@/utils/token';
-import { formatterMenu } from '@/utils/formatterMenuOrRoute';
-import router from '@/router/index';
+import { formatterMenu, formatterRoute } from '@/utils/formatterMenuOrRoute';
+import router, { initialRoutes } from '@/router';
+import find from 'lodash/find';
 
 const state = {
   permissions: [],
@@ -49,23 +50,31 @@ const mutations = {
 }
 
 const actions = {
-  async login({ commit }, payload) {
+  async login({ commit, dispatch }, payload) {
     const response = await login(payload);
-    if(response.access_token) {
+    if(response && response.access_token) {
       commit(SAVE_TOKEN, response.access_token);
+      dispatch('getUserMenu');
       router.push('/');
     }
   },
   async getCurrentUser({ commit } ) {
     const response = await queryCurrentUser();
-    if(response.code == 0) {
+    if(response && response.code == 0) {
       commit(SAVE_USER, response.data);
     }
   },
   async getUserMenu({ commit, state }, callback) {
     const response = await queryUserMenu();
-    if(response.length > 0) {
+    if(response && response.length > 0) {
       commit('SAVE_USER_MENU', response);
+
+      // 初始化动态路由
+      const _menus = response.map(item => ({...item})); //copy
+      const dynamicRoutes = find(initialRoutes, route => route.path === '/');
+      dynamicRoutes.children.push(...formatterRoute(formatterMenu(_menus)));
+      router.addRoutes([dynamicRoutes]);
+
       callback && callback(state, response);
     }
   },

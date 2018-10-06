@@ -1,18 +1,18 @@
 <template>
   <div class="global-header">
     <Icon :type="!collapsed ? 'outdent' : 'indent'" class="menu-toggle-button" @click="handleMenuToggle" />
-    <header-breadcrumb/>
+    <breadcrumb/>
     <right-content/>
   </div>
 </template>
 
 <script>
   import RightContent from './RightContent';
-  import HeaderBreadcrumb from './Breadcrumb';
   import Icon from '@c/Icon';
+  import Breadcrumb from '@c/Breadcrumb';
   export default {
     name: 'GlobalHeader',
-    components: { RightContent, Icon, HeaderBreadcrumb },
+    components: { RightContent, Icon, Breadcrumb },
     computed: {
       collapsed() {
         return this.$store.state.collapse;
@@ -31,8 +31,8 @@
     .menu-toggle-button {
       cursor: pointer;
       font-size: 20px;
-      height: 64px;
-      padding: 22px 24px;
+      height: 50px;
+      padding: 16px;
       transition: all .3s,padding 0s;
       box-sizing: border-box;
       &:hover {

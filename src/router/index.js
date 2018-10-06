@@ -3,8 +3,8 @@ import Router from 'vue-router';
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 import { getToken } from '@/utils/token';
-/* import store from '@/store';
-import { formatterRoute } from '@/utils/formatterMenuOrRoute'; */
+import store from '@/store';
+/*import { formatterRoute } from '@/utils/formatterMenuOrRoute'; */
 
 NProgress.configure({ showSpinner: false });
 
@@ -40,6 +40,10 @@ router.beforeEach((to, from, next) => {
       next({ path: '/', replace: true });
       NProgress.done();
     } else {
+      store.commit('addBookMark', {
+        path: to.path,
+        label: to.name
+      });
       next();
     }
 

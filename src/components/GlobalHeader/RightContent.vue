@@ -68,7 +68,7 @@
         }
         height: 100%;
         display: inline-block;
-        padding:20px 12px;
+        padding:13px 12px;
         //line-height: 64px;
         cursor: pointer;
         box-sizing: border-box;
