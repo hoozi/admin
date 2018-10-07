@@ -28,6 +28,7 @@ module.exports = {
       .set('@c', resolve(__dirname, './src/components'));
   },
   devServer: {
+    open: true,
     proxy 
   }
 }

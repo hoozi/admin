@@ -4,7 +4,7 @@
       <img class="logo" :src="$store.state.logo">
       <h1>{{$store.state.sysName}}</h1>
     </div>
-    <el-scrollbar class="scroll-bar">
+    <el-scrollbar class="scroll-bar" :noresize="true">
       <app-sider-menu/>
     </el-scrollbar>
   </el-aside>
@@ -21,7 +21,11 @@
       width() {
         return this.$store.state.collapse ? 64 : 256;
       }
+    },
+    mounted() {
+      
     }
+
   }
 </script>
 
@@ -32,8 +36,12 @@
     line-height: 50px;
     overflow: hidden;
     padding-left: 20px;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     transition: all .2s;
+    z-index: 20;
     &>.logo {
       display: inline-block;
       margin-top: 8px;
@@ -50,7 +58,7 @@
     }
   }
   .scroll-bar {
-    min-height: 100%;
+    height: 100%;
     .el-scrollbar__wrap {
       overflow-x: hidden;
     }

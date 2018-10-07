@@ -40,10 +40,13 @@ router.beforeEach((to, from, next) => {
       next({ path: '/', replace: true });
       NProgress.done();
     } else {
-      store.commit('addBookMark', {
-        path: to.path,
-        label: to.name
-      });
+      const { path, name:label } = to;
+      if(path && label) {
+        store.commit('addBookMark', {
+          path,
+          label
+        });
+      }
       next();
     }
 
