@@ -15,7 +15,23 @@ export const initialRoutes = [
     path: '/',
     component: () => import('@/layouts/BasicLayout'),
     name: 'layout',
-    children: []
+    redirect: '/about/us',
+    children: [
+      {
+        path: '/404',
+        name: 'err404',
+        component: () => import('@c/Exception')
+      },
+      {
+        path: '/500',
+        name: 'err500',
+        component: () => import('@c/Exception')
+      },
+      {
+        path: '*',
+        redirect: '/404'
+      }
+    ]
   }
 ]
 
@@ -29,6 +45,11 @@ const router = new Router({
   ]
 })
 
+const whiteList = {
+  '/404': true,
+  '/500': true
+}
+
 router.beforeEach((to, from, next) => {
   NProgress.start();
 
@@ -41,10 +62,11 @@ router.beforeEach((to, from, next) => {
       NProgress.done();
     } else {
       const { path, name:label } = to;
-      if(path && label) {
-        store.commit('addBookMark', {
+      if(path && label && !whiteList[path]) {
+        store.commit('addTab', {
           path,
-          label
+          label,
+          closable: true
         });
       }
       next();

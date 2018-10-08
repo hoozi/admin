@@ -72,7 +72,7 @@ const actions = {
       // 初始化动态路由
       const _menus = response.map(item => ({...item})); //copy
       const dynamicRoutes = find(initialRoutes, route => route.path === '/');
-      dynamicRoutes.children.push(...formatterRoute(formatterMenu(_menus)));
+      dynamicRoutes.children.unshift(...formatterRoute(formatterMenu(_menus)));
       router.addRoutes([dynamicRoutes]);
 
       callback && callback(state, response);

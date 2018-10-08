@@ -5,6 +5,12 @@
 .mr8 {
   margin-right: 8px;
 }
+.mt24 {
+  margin-top: 24px;
+}
+.mb16 {
+  margin-bottom: 16px;
+}
 
 // 重置element ui的css
 .el-main {
@@ -29,5 +35,109 @@
     border-radius: 0;
     border-width: 0;
     border-bottom-width: 1px;
+  }
+}
+
+.tabs-bar {
+  %iconSize {
+    width: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  padding-right: 40px;
+  box-sizing: border-box;
+  position: relative;
+  height: 40px;
+  background: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+  #{&}-control {
+    cursor: pointer;
+    border-left: 1px solid #f6f6f6;
+    width: 40px;
+    height: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    right:0;
+    top: 0;
+    .menu-drop-button {
+      @extend %iconSize;
+    }
+    &:hover {
+      background-color: #f6f6f6;
+    }
+  }
+  .el-tabs__header {
+    margin-bottom: 0;
+    .el-tabs__nav-next, .el-tabs__nav-prev {
+      @extend %iconSize;
+      &:hover {
+        background-color: #f6f6f6;
+      }
+    }
+    .el-tabs__nav-next {
+      border-left: 1px solid #f6f6f6;
+    }
+    .el-tabs__nav-prev {
+      border-right: 1px solid #f6f6f6;
+    }
+  }
+  .el-tabs__nav-wrap.is-scrollable {
+    padding: 0 40px;
+  }
+  .el-tabs--card {
+    & > .el-tabs__header {
+      border-bottom: 0;
+      .el-tabs__item,
+      .el-tabs__nav {
+        border:0;
+      }
+      .el-tabs__item {
+        border-right: 1px solid #f6f6f6;
+        position: relative;
+        font-weight: normal;
+        &:hover {
+          background-color: #f6f6f6;
+          &:before {
+            width: 100%;
+            background-color:#409EFF;
+          }
+        }
+        &:before {
+          content: '';
+          width: 0;
+          position: absolute;
+          top:0;
+          left: 0;
+          height: 2px;
+          background-color: transparent;
+          transition: width .2s;
+        }
+        &.is-focus {
+          outline: none;
+          box-shadow: none;
+          border-radius: 0;
+        }
+        &.is-active {
+          background-color: #f6f6f6;
+          color: #409EFF;
+          &:before {
+            width: 100%;
+            background-color:#409EFF;
+          }
+        }
+      }
+    }
+   
+  }
+}
+
+// standard table
+.standard-table {
+  th {
+    word-break: break-word;
+    color: rgba(0,0,0,.85);
+    background: #fafafa;
   }
 }

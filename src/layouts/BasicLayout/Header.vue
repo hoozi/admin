@@ -1,5 +1,5 @@
 <template>
-  <el-header height="50px">
+  <el-header height="auto">
     <global-header/>
   </el-header>
 </template>

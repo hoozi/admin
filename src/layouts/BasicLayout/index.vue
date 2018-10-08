@@ -37,13 +37,13 @@
     background: #f0f2f5;
     #{&}-header {
       background: #fff;
-      box-shadow: 0 1px 4px rgba(0,21,41,.08);
       height: 50px;
-      padding: 0 12px 0 0;
+      padding: 0;
       position: relative;
     }
     #{&}-content {
-
+      height: 100%;
+      overflow: hidden;
     }
     #{&}-footer {
       

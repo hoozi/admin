@@ -1,5 +1,7 @@
 <template>
-  <h1>att</h1>
+<div>
+  {{$route.path}}
+</div>
 </template>
 
 <script>
@@ -7,4 +9,6 @@
 
   }
 </script>
+
+
 
