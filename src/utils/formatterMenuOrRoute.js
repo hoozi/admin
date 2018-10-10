@@ -4,9 +4,7 @@ import resolvePath from './resolvePath';
 export const formatterMenu = function formatterMenu(menus, parentPath = '') {
   return menus.map(item => {
     let { path } = item;
-    if(!isUrl(path)) {
-      path = parentPath + item.path;
-    }
+    path = parentPath + item.path;
     const result = {
       ...item,
       path,
@@ -29,7 +27,7 @@ export const formatterRoute = function formatterRoute(menus) {
     let componentPath = '';
     if(!isUrl(path)) {
       if(component) {
-        componentPath = `${ component.indexOf('/')>=0 ? component : 'layouts/'+component}`;
+        componentPath = `${ component.indexOf('/')>=0 ? component : 'layouts/'+component }`;
       } else {
         componentPath = `pages/${resolvePath(path)}`
       }

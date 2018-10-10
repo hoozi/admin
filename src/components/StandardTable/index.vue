@@ -1,7 +1,7 @@
 <template>
   <el-table
     v-bind="$attrs"
-    :data="data"
+    :data="data" 
     class="standard-table"
   >
     <el-table-column

@@ -2,19 +2,26 @@ import {
   login,
   //logout,
   queryCurrentUser,
-  queryUserMenu
+  queryUserMenu,
+  queryUserPage
 } from '@/services/user';
 import { setToken, removeToken } from '@/utils/token';
-import { formatterMenu, formatterRoute } from '@/utils/formatterMenuOrRoute';
-import router, { initialRoutes } from '@/router';
-import find from 'lodash/find';
+import { formatterMenu } from '@/utils/formatterMenuOrRoute';
+import router from '@/router';
+import createRoutes from '@/utils/createRoutes';
 
 const state = {
   permissions: [],
   userInfo: {},
   userMenu: [],
-  routes: [],
-  token: ''
+  token: '',
+  userPage: {
+    current: 1,
+    pages: 0,
+    records: [],
+    size: 0,
+    total: 0
+  }
 }
 
 const SAVE_USER = 'SAVE_USER';
@@ -41,7 +48,7 @@ const mutations = {
     setToken(token);
   },
   [REMOVE_TOKEN](state) {
-    state.token = [];
+    state.token = '';
     removeToken();
   },
   [SAVE_USER_MENU](state, userMenu) {
@@ -70,13 +77,14 @@ const actions = {
       commit('SAVE_USER_MENU', response);
 
       // 初始化动态路由
-      const _menus = response.map(item => ({...item})); //copy
-      const dynamicRoutes = find(initialRoutes, route => route.path === '/');
-      dynamicRoutes.children.unshift(...formatterRoute(formatterMenu(_menus)));
-      router.addRoutes([dynamicRoutes]);
+      createRoutes(response);
 
       callback && callback(state, response);
     }
+  },
+  async getUserPage({ commit }, params) {
+    const response = await queryUserPage(params);
+    console.log(response)
   },
   logout({ commit, rootState }) {
     commit(REMOVE_TOKEN);

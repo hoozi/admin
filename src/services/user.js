@@ -12,3 +12,7 @@ export async function queryCurrentUser() {
 export async function queryUserMenu() {
   return request('/admin/menu/userMenu');
 }
+
+export async function queryUserPage(params) {
+  return request(`/admin/user/userPage?${stringify(params)}`);
+}

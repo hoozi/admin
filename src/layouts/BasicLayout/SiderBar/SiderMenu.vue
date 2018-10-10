@@ -27,7 +27,8 @@
     computed: {
       ...mapGetters(['collapse']),
       ...mapGetters('user', ['menus'])
-    }
+    },
+    methods: {}
   }
 </script>
 

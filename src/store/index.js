@@ -13,8 +13,8 @@ const state = {
   collapse: false,
   tabs: [
     {
-      path: '/about/us',
-      label: '关于',
+      path: '/home',
+      label: '首页',
       closable: false,
       icon: 'home'
     }

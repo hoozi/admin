@@ -2,6 +2,7 @@ import axios from 'axios';
 import { getToken } from '@/utils/token';
 import { Notification } from 'element-ui';
 import store from '@/store/index';
+import router from '@/router';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -73,6 +74,9 @@ export default function request(url, options) {
   .catch(e => {
     if (e.status === 401) {
       store.dispatch('user/logout');
+      return;
+    } else if(e.status === 500 ) {
+      router.push('/500');
       return;
     }
   });

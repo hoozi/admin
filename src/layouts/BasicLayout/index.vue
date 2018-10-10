@@ -32,6 +32,7 @@
   .full {
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
   }
   .layout {
     background: #f0f2f5;

@@ -63,6 +63,7 @@
 <script>
   import StandardTable from '@c/StandardTable';
   import Icon from '@c/Icon';
+  import { mapActions } from 'vuex';
   export default {
     name: 'User',
     components: {
@@ -119,8 +120,9 @@
       }
     },
     methods: {
+      ...mapActions('user', ['getUserPage']),
       handleSearch() {
-        console.log(this.searchForm)
+        this.getUserPage();
       }
     }
   }
