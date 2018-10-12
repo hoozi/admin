@@ -29,7 +29,7 @@
           </el-select>
         </el-form-item>
       </el-col>
-      <el-col :md="8">
+      <!-- <el-col :md="8">
         <el-form-item label="创建时间">
           <el-date-picker
             type="daterange"
@@ -42,21 +42,74 @@
           >
           </el-date-picker>
         </el-form-item>
-      </el-col>
+      </el-col> -->
       <el-col :md="8">
-        <el-button type="primary" size="small" native-type="submit" @submit.native.prevent="handleSearch">查询</el-button>
-        <el-button size="small">重置</el-button>
+        <el-button type="primary" size="small" native-type="submit" @submit.native.prevent="handleSearch">查 询</el-button>
+        <el-button size="small" @click="handleReset">重 置</el-button>
       </el-col>
     </el-row>
   </el-form>
-  <el-button size="small" type="primary" class="mt24 mb16"><icon type="plus" size="small"/> 新建</el-button>
+  <el-button size="small" type="primary" class="mt24 mb16"><icon type="adduser" size="small"/> 新建用户</el-button>
   <standard-table
-    :columns="columns"
     size="medium"
-    :data="data"
+    model="user"
     border
     stripe
-  />
+  >
+    <el-table-column
+      type="index"
+    />
+    <el-table-column
+      property="userId"
+      label="id"
+      width="80"
+    />
+    <el-table-column
+      property="username"
+      label="用户名"
+    />
+    <el-table-column
+      property="deptName"
+      label="所属部门"
+    />
+    <el-table-column
+      label="角色"
+      width="180"
+    >
+      <template slot-scope="scope">
+        <el-tag size="small" v-for="item in scope.row.roleList" :key="item.roleId">{{item.roleName}}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column
+      property="delFlag"
+      label="状态"
+      width="100"
+    >
+      <template slot-scope="scope">
+        <status :status="scope.row.delFlag" />
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="创建时间"
+    >
+      <template slot-scope="scope">
+        {{scope.row.createTime | formatDate}}
+      </template>
+    </el-table-column>
+    <el-table-column label="操作">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          icon="el-icon-erp-edit"
+          @click="handleEdit(scope.$index, scope.row)">编 辑</el-button>
+        <el-button
+          size="mini"
+          type="danger"
+          icon="el-icon-erp-deleteuser"
+          @click="handleDelete(scope.$index, scope.row)">删 除</el-button>
+      </template>
+    </el-table-column>
+  </standard-table>
 </el-card>
 </template>
 
@@ -64,11 +117,21 @@
   import StandardTable from '@c/StandardTable';
   import Icon from '@c/Icon';
   import { mapActions } from 'vuex';
+  
   export default {
     name: 'User',
     components: {
       StandardTable,
-      Icon
+      Icon,
+      status: {
+        name: 'Status',
+        props: ['status'],
+        render(h) {
+          const statusMap = ['有效', '无效', '锁定'];
+          const statusType = ['success', 'danger', 'warning']
+          return <el-tag type={statusType[this.status]} size="small">{statusMap[this.status]}</el-tag>
+        }
+      }
     },
     data() {
       return {
@@ -96,33 +159,25 @@
             label:'锁定',
             value: 9
           }
-        ],
-        columns: [
-          {
-            label: '用户名',
-            prop: 'username'
-          },
-          {
-            label: '年龄',
-            prop: 'age'
-          }
-        ],
-        data: [
-          {
-            username: '张三',
-            age: '23'
-          },
-          {
-            username: '李四',
-            age: '25'
-          }
         ]
       }
     },
+    mounted() {
+      this.getUserPage();
+    },
     methods: {
       ...mapActions('user', ['getUserPage']),
+      getPageByForm() {
+        this.getUserPage(this.searchForm);
+      },
       handleSearch() {
-        this.getUserPage();
+        this.getPageByForm();
+      },
+      handleReset() {
+        for(let key in this.searchForm) {
+          this.searchForm[key] = ''
+        }
+        this.getPageByForm();
       }
     }
   }

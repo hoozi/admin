@@ -24,6 +24,7 @@ const state = {
 }
 
 export default new Vuex.Store({
+  strict: true,
   modules: {
     user
   },

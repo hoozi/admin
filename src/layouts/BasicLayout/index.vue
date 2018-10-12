@@ -4,7 +4,6 @@
     <el-container direction="vertical" class="layout">
       <app-header class="layout-header"/>
       <app-content class="layout-content"/>
-      <app-footer class="layout-footer"/>
     </el-container>
   </el-container>
 </template>

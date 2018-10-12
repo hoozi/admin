@@ -37,9 +37,7 @@
 
 <script>
   import map from './map';
-  import { setToken } from '@/utils/token';
   import CodeImg from './CodeImg';
-  import { login } from '@/services/user'
   export default {
     name: 'PageLogin',
     components: { CodeImg },

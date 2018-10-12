@@ -15,19 +15,21 @@ const state = {
   userInfo: {},
   userMenu: [],
   token: '',
-  userPage: {
-    current: 1,
-    pages: 0,
-    records: [],
-    size: 0,
-    total: 0
-  }
+
+  current: 1,
+  pages: 0,
+  records: [],
+  size: 0,
+  total: 0
+  
 }
 
 const SAVE_USER = 'SAVE_USER';
 const SAVE_TOKEN = 'SAVE_TOKEN';
 const SAVE_USER_MENU = 'SAVE_USER_MENU';
 const REMOVE_TOKEN = 'REMOVE_TOKEN';
+const SAVE_USER_PAGE = 'SAVE_USER_PAGE';
+//const SAVE_USER_PERMISSIONS = 'SAVE_USER_PERMISSIONS';
 
 const getters = {
   username(state) {
@@ -35,6 +37,9 @@ const getters = {
   },
   menus(state) {
     return state.userMenu;
+  },
+  records(state) {
+    return state.records;
   }
 }
 
@@ -53,6 +58,11 @@ const mutations = {
   },
   [SAVE_USER_MENU](state, userMenu) {
     state.userMenu = formatterMenu(userMenu);
+  },
+  [SAVE_USER_PAGE](state, userPage) {
+    for(let key in userPage) {
+      state[key] = userPage[key];
+    }
   }
 }
 
@@ -73,24 +83,28 @@ const actions = {
   },
   async getUserMenu({ commit, state }, callback) {
     const response = await queryUserMenu();
-    if(response && response.length > 0) {
-      commit('SAVE_USER_MENU', response);
+    if(response && response.code !== 0 ) return; 
+    
+    commit(SAVE_USER_MENU, response.data);
 
-      // 初始化动态路由
-      createRoutes(response);
+    // 初始化动态路由
+    createRoutes(response.data);
 
-      callback && callback(state, response);
-    }
+    callback && callback(state, response);
+    
   },
   async getUserPage({ commit }, params) {
     const response = await queryUserPage(params);
-    console.log(response)
+    if(response && response.code !== 0) return;
+    commit(SAVE_USER_PAGE, response.data);
   },
   logout({ commit, rootState }) {
     commit(REMOVE_TOKEN);
     router.push(`/login?redirect=${rootState.route.path}`)
   }
 }
+
+
 
 export default {
   namespaced: true,
