@@ -33,7 +33,6 @@
   import { mapState, mapMutations } from 'vuex';
   import Icon from '@c/Icon';
   import findIndex from 'lodash/findIndex';
-  import remove from 'lodash/remove';
   export default {
     name: 'TabsBar',
     data() {
@@ -51,7 +50,7 @@
       ...mapState(['tabs'])
     },
     methods: {
-      ...mapMutations(['refreshTab']),
+      ...mapMutations(['REFRESH_TAB']),
       handleTabClick(tab) {
         const { name } = tab;
         this.$router.push({
@@ -73,7 +72,7 @@
         }
       },
       handleCloseOther() {
-        this.refreshTab(this.tabs.filter((tab, index)=>{
+        this.REFRESH_TAB(this.tabs.filter((tab, index)=>{
           return tab.path===this.$route.path || index===0
         }))
       },

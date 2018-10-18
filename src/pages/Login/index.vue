@@ -1,43 +1,36 @@
 <template>
-  <el-row class="row-hfull">
-    <el-col :span="15" class="bg">
-      <div class="mask">
-        <div class="mask-text">
-          <h1>优质服务，追求卓越</h1>
-          <p>Amazing Stuff is Lorem Here.ICE Team</p>
-        </div>
+  <div class="login-container">
+    <div class="login-area">
+      <div class="login-header">
+        <h1>优质服务，追求卓越</h1>
+        <p>Quality service, The pursuit of excellence</p>
       </div>
-    </el-col>
-    <el-col :span="9" class="login-area">
-      <div class="login-box">
-        <h2 class="login-title">登录</h2>
-        <el-form status-icon :rules="rules" :model="loginForm" ref="loginForm" @submit.native.prevent="handleLogin">
-          <el-form-item :prop="item.vmodel" v-for="item in map" :key="item.vmodel">
-            <el-input 
-              :type="item.type" 
-              :placeholder="item.placeholder" 
-              v-model="loginForm[`${item.vmodel}`]" 
-              autocomplete="off" 
-              class="login-line-input"
-            >
-              <i slot="prefix" :class="[`el-icon-erp-${icon(item.vmodel)}`]"></i>
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="code">
-            <code-img :code.sync="loginForm.code"/>
-          </el-form-item>
-          <el-form-item prop="">
-            <el-button type="primary" native-type="submit" @submit.native.prevent="handleLogin" class="login-button">登录</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-col>
-  </el-row>
+      <el-form status-icon :rules="rules" :model="loginForm" ref="loginForm" @submit.native.prevent="handleLogin">
+        <el-form-item :prop="item.vmodel" v-for="item in map" :key="item.vmodel">
+          <el-input 
+            :type="item.type" 
+            :placeholder="item.placeholder" 
+            v-model="loginForm[`${item.vmodel}`]" 
+            autocomplete="off" 
+          >
+            <i slot="prefix" :class="[`el-icon-erp-${icon(item.vmodel)}`,'prefix']"></i>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="code">
+          <code-img :code.sync="loginForm.code"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :loading="submitting" native-type="submit" @submit.native.prevent="handleLogin" class="login-button">登录</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
 </template>
 
 <script>
   import map from './map';
   import CodeImg from './CodeImg';
+  import { getLoadings } from '@tw666/vuex-loading';
   export default {
     name: 'PageLogin',
     components: { CodeImg },
@@ -63,6 +56,11 @@
         }
       }
     },
+    computed: {
+      ...getLoadings((loadings) => ({
+        submitting: loadings.action('user/login')
+      }))
+    },
     methods: {
       icon(vmodel) {
         return vmodel === 'username' ? 'user' : 'lock';
@@ -86,71 +84,28 @@
 </script>
 
 <style lang="scss" scoped>
-  .bg, 
-  .login-area,
-  .row-hfull {
+  .login-container {
+    width: 100%;
     height: 100%;
-  }
-  .bg {
     background-image: url('../../assets/bg.jpg');
     background-size: cover;
-    .mask {
-      background-color: rgba(0,0,0,.6);
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      .mask-text {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        h1 {
-          margin-top: 60px;
-          font-weight: 500;
-          font-size: 38px;
-          line-height: 1.5;
-          text-align: center;
-          color: rgb(255, 255, 255);
-        }
-        p {
-          margin-top: 30px;
-          font-size: 16px;
-          color: rgb(255, 255, 255);
-        }
-      }
-    }
-  }
-  .login-area {
-    background: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    .login-box {
-      width: 360px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      .login-title {
-        margin-bottom: 40px;
-        font-weight: 500;
-        font-size: 32px;
-        text-align: center;
-        letter-spacing: 4px;
-      }
-      .login-button {
-        width: 100%;
-        margin-top: 24px;
-      }
-      .el-form {
-        width: 100%;
-      }
+  }
+  .login-area {
+    width: 360px;
+  }
+  .login-header {
+    margin-bottom: 32px;
+    text-align: center;
+    h1, p {
+      color: #fff;
     }
+  }
+  .login-button {
+    width: 100%;
   }
 </style>
 

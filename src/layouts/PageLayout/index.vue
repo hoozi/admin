@@ -1,11 +1,7 @@
 <template>
   <div class="layout-page">
-<!--     <page-header
-      :page-name="$route.name"
-    /> -->
-    
     <div class="layout-page-content">
-      <router-view></router-view>
+      <slot></slot>
     </div>
     <global-footer>Copyright <icon type="copyright"/> 2018 All Rights Reservered</global-footer>
   </div>
@@ -25,8 +21,19 @@
 </script>
 
 <style lang="scss" scoped>
-  .layout-page-content {
-    margin: 24px 24px 0;
+  .layout-page {
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    #{&}-content {
+      margin: 24px 24px 0;
+      flex: auto;
+      p {
+        height: 100px;
+      }
+    }
   }
+ 
 </style>
 

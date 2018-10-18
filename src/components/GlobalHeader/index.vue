@@ -24,7 +24,7 @@
     },
     methods: {
       handleMenuToggle() {
-        this.$store.commit('toggleMenu');
+        this.$store.commit('TOGGLE_MENU');
       }
     }
   }

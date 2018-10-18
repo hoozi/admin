@@ -1,31 +1,27 @@
 <template>
   <el-main>
-    <el-scrollbar class="main-scrollbar" v-if="!isError">
-      <keep-alive>
-        <router-view :key="key"/>
-      </keep-alive>
-    </el-scrollbar>
-    <template v-else>
-      <router-view :key="key"/>
-    </template>
+    
+    
+      <page-layout>
+        <keep-alive>
+          <router-view :key="key"/>
+        </keep-alive>
+      </page-layout>
+    
+      
   </el-main>
 </template>
 
 <script>
-  const errorMap = {
-    '/404': true,
-    '/403': true,
-    '/500': true
-  }
+  import PageLayout from '@/layouts/PageLayout';
   export default {
     name: 'AppContent',
+    components: {
+      PageLayout
+    },
     computed: {
       key() {
         return this.$route.fullPath
-      },
-      isError() {
-        const { fullPath } = this.$route;
-        return errorMap[fullPath]
       }
     }
   }
@@ -34,5 +30,9 @@
 <style lang="scss" scoped>
   .main-scrollbar {
     height: 100%;
+    overflow-y:auto;
+  }
+  .layout-page-content {
+    margin: 24px 24px 0;
   }
 </style>

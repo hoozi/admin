@@ -1,8 +1,8 @@
-export const toggleMenu = state => {
+export const TOGGLE_MENU = state => {
   state.collapse = !state.collapse;
 }
 
-export const addTab = (state, tab) => {
+export const ADD_TAB = (state, tab) => {
   const hasTab = state.tabs.some(item => {
     return tab.path === item.path;
   })
@@ -10,6 +10,12 @@ export const addTab = (state, tab) => {
   state.tabs.push(tab)
 }
 
-export const refreshTab = (state, tabs) => {
+export const REFRESH_TAB = (state, tabs) => {
   state.tabs = tabs;
+}
+
+export const SET_LOADING = (state, effects) => {
+  for(let key in effects) {
+    state.loading[key] = effects[key];
+  }
 }

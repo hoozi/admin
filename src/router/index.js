@@ -5,48 +5,45 @@ import 'nprogress/nprogress.css'// progress bar style
 import { getToken } from '@/utils/token';
 import store from '@/store';
 import { urlReg } from '@/utils/const';
-/*import { formatterRoute } from '@/utils/formatterMenuOrRoute'; */
 
 NProgress.configure({ showSpinner: false });
 
 Vue.use(Router);
 
 export const constRoutes = [
-  {
-    path: '/404',
-    name: 'err404',
-    component: () => import('@/pages/Exception/404')
-  },
-  {
-    path: '/500',
-    name: 'err500',
-    component: () => import('@/pages/Exception/500')
-  },
   { path: '*', redirect: '/404' }
 ]
 
-export const initialRoutes = [
-  {
-    path: '/',
-    component: () => import('@/layouts/BasicLayout'),
-    name: 'layout',
-    redirect: '/home',
-    children: [
-      {
-        path: '/home',
-        name: 'home',
-        component: () => import('@/pages/Home')
-      }
-    ]
-  }
-]
 
 const router = new Router({
   routes: [
     {
+      path: '/',
+      component: () => import('@/layouts/BasicLayout'),
+      name: 'layout',
+      redirect: '/home',
+      children: [
+        {
+          path: '/home',
+          name: 'home',
+          component: () => import('@/pages/Home')
+        }
+      ]
+    },
+    {
       name: 'login',
       path: '/login',
       component: () => import('@/pages/Login')
+    },
+    {
+      path: '/404',
+      name: 'err404',
+      component: () => import('@/pages/Exception/404')
+    },
+    {
+      path: '/500',
+      name: 'err500',
+      component: () => import('@/pages/Exception/500')
     }
   ]
 })
@@ -71,7 +68,7 @@ router.beforeEach((to, from, next) => {
       const { path, name:label } = to;
       const inUrl = urlReg.test(path);
       if(path && label && !whiteList[path] && !inUrl) {
-        store.commit('addTab', {
+        store.commit('ADD_TAB', {
           path,
           label,
           closable: true
@@ -92,6 +89,6 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
   NProgress.done();
-})
+});
 
 export default router;

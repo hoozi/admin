@@ -2,7 +2,7 @@
   <el-menu  
     background-color="#001529"
     text-color="#a7aaae"
-    active-text-color="#409EFF" 
+    active-text-color="#4a89dc" 
     router 
     :collapse-transition="false" 
     :collapse="collapse"

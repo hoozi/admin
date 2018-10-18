@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@tw666/vuex-loading": "^1.1.0",
     "axios": "^0.18.0",
     "element-ui": "^2.4.5",
     "js-cookie": "^2.2.0",

@@ -43,7 +43,7 @@
     }
     #{&}-content {
       height: 100%;
-      overflow: hidden;
+      //overflow: hidden;
     }
     #{&}-footer {
       

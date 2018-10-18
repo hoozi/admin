@@ -3,7 +3,9 @@ import {
   //logout,
   queryCurrentUser,
   queryUserMenu,
-  queryUserPage
+  deleteUser,
+  queryUserPage,
+  queryDetailUser
 } from '@/services/user';
 import { setToken, removeToken } from '@/utils/token';
 import { formatterMenu } from '@/utils/formatterMenuOrRoute';
@@ -19,8 +21,10 @@ const state = {
   current: 1,
   pages: 0,
   records: [],
-  size: 0,
-  total: 0
+  size: 10,
+  total: 0,
+
+  detail: {}
   
 }
 
@@ -29,6 +33,7 @@ const SAVE_TOKEN = 'SAVE_TOKEN';
 const SAVE_USER_MENU = 'SAVE_USER_MENU';
 const REMOVE_TOKEN = 'REMOVE_TOKEN';
 const SAVE_USER_PAGE = 'SAVE_USER_PAGE';
+const SAVE_USER_DETAIL = 'SAVE_USER_DETAIL';
 //const SAVE_USER_PERMISSIONS = 'SAVE_USER_PERMISSIONS';
 
 const getters = {
@@ -63,6 +68,9 @@ const mutations = {
     for(let key in userPage) {
       state[key] = userPage[key];
     }
+  },
+  [SAVE_USER_DETAIL](state, detail) {
+    state.detail = detail;
   }
 }
 
@@ -93,10 +101,21 @@ const actions = {
     callback && callback(state, response);
     
   },
-  async getUserPage({ commit }, params) {
-    const response = await queryUserPage(params);
+  async getPager({ commit, state }, params) {
+    const { current, size } = state;
+    const response = await queryUserPage({current, size, ...params});
     if(response && response.code !== 0) return;
     commit(SAVE_USER_PAGE, response.data);
+  },
+  async deleteUser( { dispatch }, id ) {
+    const response = await deleteUser(id);
+    if(response && response.code !== 0) return;
+    dispatch('getPager');
+  },
+  async getDetail({commit}, id) {
+    const response = await queryDetailUser(id);
+    if(response && response.code !== 0) return;
+    commit(SAVE_USER_DETAIL, response.data);
   },
   logout({ commit, rootState }) {
     commit(REMOVE_TOKEN);

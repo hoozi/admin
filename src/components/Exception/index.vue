@@ -72,7 +72,7 @@
       font-size: 16px;
     }
     #{&}-link {
-      color: #409EFF;
+      color: #4a89dc;
       text-decoration: none;
     }
   }

@@ -17,6 +17,10 @@ for(let filterName in filters) {
   Vue.filter(filterName, filters[filterName])
 }
 
+Function.prototype.getName = function(){
+  return this.name || this.toString().match(/function\s*([^(]*)\(/)[1]
+}
+
 new Vue({
   router,
   store,

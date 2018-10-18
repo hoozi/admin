@@ -16,3 +16,13 @@ export async function queryUserMenu() {
 export async function queryUserPage(params) {
   return request(`/admin/user/userPage?${stringify(params)}`);
 }
+
+export async function deleteUser(id) {
+  return request(`/admin/user/${id}`, {
+    method: 'DELETE'
+  });
+}
+
+export async function queryDetailUser(id) {
+  return request(`/admin/user/${id}`);
+}

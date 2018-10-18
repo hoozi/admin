@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const proxyUrl = 'http://47.99.42.198';
+const proxyUrl = 'http://118.31.6.176:9999';
 const localPath = '/';
 
 const serviceList = [

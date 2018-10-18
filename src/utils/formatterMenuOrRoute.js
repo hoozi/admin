@@ -20,6 +20,22 @@ export const formatterMenu = function formatterMenu(menus, parentPath = '') {
   });
 }
 
+const urlReg= /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
+
+export const getRedirect = item => {
+  let r = ''
+  
+  if (item && item.children) {
+    if (item.children[0] && item.children[0].path) {
+      r = `${!urlReg.test(item.children[0].path) ? item.children[0].path : null}`;
+      item.children.forEach(children => {
+        getRedirect(children);
+      });
+    }
+  }
+  return r
+};
+
 export const formatterRoute = function formatterRoute(menus) {
   
   return menus.map(item => {
@@ -43,6 +59,7 @@ export const formatterRoute = function formatterRoute(menus) {
     if (item.children.length > 0) {
       result.children = formatterRoute(item.children);
     }
+    result.redirect = getRedirect(item)
     return result;
   });
   
