@@ -23,6 +23,7 @@ summary {
 }
 html, body, #app, #root {
   @extend %full;
+  min-width: 1024px;
 }
 
 body {

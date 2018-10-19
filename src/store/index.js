@@ -7,6 +7,8 @@ import * as mutations from './mutations';
 
 // modules
 import user from './modules/user';
+import dept from './modules/dept';
+import role from './modules/role';
 
 Vue.use(Vuex)
 
@@ -28,7 +30,9 @@ const state = {
 export default new Vuex.Store({
   //strict: true,
   modules: {
-    user
+    user,
+    dept,
+    role
   },
   state,
   getters,

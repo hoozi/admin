@@ -17,12 +17,19 @@ export async function queryUserPage(params) {
   return request(`/admin/user/userPage?${stringify(params)}`);
 }
 
-export async function deleteUser(id) {
+export async function deleteUserById(id) {
   return request(`/admin/user/${id}`, {
     method: 'DELETE'
   });
 }
 
-export async function queryDetailUser(id) {
+export async function queryDetailUserById(id) {
   return request(`/admin/user/${id}`);
+}
+
+export async function editUser({params, method}) {
+  return request(`/admin/user`, {
+    method,
+    data: params
+  })
 }

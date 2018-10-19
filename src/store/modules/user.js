@@ -3,14 +3,33 @@ import {
   //logout,
   queryCurrentUser,
   queryUserMenu,
-  deleteUser,
+  deleteUserById,
   queryUserPage,
-  queryDetailUser
-} from '@/services/user';
+  queryDetailUserById,
+  editUser,
+} from '@/api/user';
 import { setToken, removeToken } from '@/utils/token';
 import { formatterMenu } from '@/utils/formatterMenuOrRoute';
 import router from '@/router';
 import createRoutes from '@/utils/createRoutes';
+
+const SAVE_USER = 'SAVE_USER';
+const SAVE_TOKEN = 'SAVE_TOKEN';
+const SAVE_USER_MENU = 'SAVE_USER_MENU';
+const REMOVE_TOKEN = 'REMOVE_TOKEN';
+const SAVE_USER_PAGE = 'SAVE_USER_PAGE';
+const SAVE_USER_DETAIL = 'SAVE_USER_DETAIL';
+const RESET_USER_DETAIL = 'RESET_USER_DETAIL';
+//const SAVE_USER_PERMISSIONS = 'SAVE_USER_PERMISSIONS';
+
+const baseDetail = {
+  username: '',
+  password: '',
+  delFlag: '0',
+  deptName: '',
+  role: [],
+  deptId: ''
+}
 
 const state = {
   permissions: [],
@@ -24,17 +43,11 @@ const state = {
   size: 10,
   total: 0,
 
-  detail: {}
+  detail: {
+    ...baseDetail
+  }
   
 }
-
-const SAVE_USER = 'SAVE_USER';
-const SAVE_TOKEN = 'SAVE_TOKEN';
-const SAVE_USER_MENU = 'SAVE_USER_MENU';
-const REMOVE_TOKEN = 'REMOVE_TOKEN';
-const SAVE_USER_PAGE = 'SAVE_USER_PAGE';
-const SAVE_USER_DETAIL = 'SAVE_USER_DETAIL';
-//const SAVE_USER_PERMISSIONS = 'SAVE_USER_PERMISSIONS';
 
 const getters = {
   username(state) {
@@ -50,11 +63,11 @@ const getters = {
 
 const mutations = {
   [SAVE_USER](state, user) {
-    state.permissions = user.permissions;
-    state.userInfo = user.sysUser;
+    Object.assign(state, {permissions:user.permissions});
+    Object.assign(state, {userInfo:user.sysUser});
   },
   [SAVE_TOKEN](state, token) {
-    state.token = token;
+    Object.assign(state, {token});
     setToken(token);
   },
   [REMOVE_TOKEN](state) {
@@ -62,15 +75,17 @@ const mutations = {
     removeToken();
   },
   [SAVE_USER_MENU](state, userMenu) {
-    state.userMenu = formatterMenu(userMenu);
+    Object.assign(state, { userMenu: formatterMenu(userMenu) });
   },
   [SAVE_USER_PAGE](state, userPage) {
-    for(let key in userPage) {
-      state[key] = userPage[key];
-    }
+    Object.assign(state, {...userPage});
   },
   [SAVE_USER_DETAIL](state, detail) {
-    state.detail = detail;
+    const role = detail.roleList.map(item => item.roleId);
+    Object.assign(state.detail, detail, {role, password: ''});
+  },
+  [RESET_USER_DETAIL](state) {
+    Object.assign(state.detail, baseDetail); 
   }
 }
 
@@ -108,14 +123,21 @@ const actions = {
     commit(SAVE_USER_PAGE, response.data);
   },
   async deleteUser( { dispatch }, id ) {
-    const response = await deleteUser(id);
+    const response = await deleteUserById(id);
     if(response && response.code !== 0) return;
     dispatch('getPager');
   },
-  async getDetail({commit}, id) {
-    const response = await queryDetailUser(id);
+  async getDetail({commit}, { id, callback }) {
+    const response = await queryDetailUserById(id);
     if(response && response.code !== 0) return;
     commit(SAVE_USER_DETAIL, response.data);
+    callback && callback(response.data);
+  },
+  async addOrEditUser({ dispatch }, { params, method, callback }) {
+    const response = await editUser({params, method});
+    if(response && response.code !== 0) return;
+    callback && callback();
+    dispatch('getPager');
   },
   logout({ commit, rootState }) {
     commit(REMOVE_TOKEN);
