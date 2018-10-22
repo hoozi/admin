@@ -239,6 +239,9 @@
       ...mapMutations('role', {
         resetDetail(commit) {
           commit('RESET_ROLE_DETAIL');
+        },
+        setCurrentAuth(commit, currentAuth) {
+          commit('SAVE_AUTH_LIST', currentAuth);
         }
       }),
       getPageByForm() {
@@ -247,10 +250,9 @@
       getCheckedKeys(trees, authKeys) {
         return trees.map(tree => {
           if(tree.children && tree.children.length >0) {
-            return this.getCheckedKeys(tree.children, authKeys);
-          } else {
-            return authKeys.filter(a => a === tree.id)
+            return this.getCheckedKeys(tree.children, authKeys)
           }
+          return authKeys.filter(a => tree.id === a)
         })
       },
       openDialog(isAdd) {
@@ -319,8 +321,8 @@
           this.getCurrentAuth({
             code,
             callback: () => {
-              const checkedKeys = flattenDeep(this.getCheckedKeys(this.authTree, this.currentAuth));
-              this.$refs.authTree.setCheckedKeys(checkedKeys);
+              const checkedKeys = this.getCheckedKeys(this.authTree, this.currentAuth);
+              this.$refs.authTree.setCheckedKeys(flattenDeep(checkedKeys));
             }
           });
         });
@@ -329,12 +331,12 @@
       },
       handleAuthCheck(data, checked) {
         const { checkedKeys } = checked;
-        this.params.menuIds = checkedKeys;
+        this.setCurrentAuth(checkedKeys)
       },
       handleSetAuth() {
-        
         const { params } = this;
-        const menuIds = [...this.currentAuth, ...this.params.menuIds, ...this.$refs.authTree.getHalfCheckedKeys()];
+        const menuIds = [...this.currentAuth, ...this.$refs.authTree.getHalfCheckedKeys()];
+        //console.log(uniqWith(menuIds))
         params.menuIds = uniqWith(menuIds).join();
         
         this.setAuth({
