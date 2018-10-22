@@ -25,3 +25,13 @@ export async function editRole({params, method}) {
     data: params
   })
 }
+
+export async function setAuth2Role(params) {
+  return request(`/admin/role/roleMenuUpd?${decodeURIComponent(stringify(params))}`, {
+    method: 'PUT'
+  })
+}
+
+export async function queryAuthByCode(code) {
+  return request(`/admin/menu/roleTree/${code}`)
+}

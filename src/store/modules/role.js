@@ -3,7 +3,9 @@ import {
   queryDetailRoleById,
   queryRolePage,
   deleteRoleById,
-  editRole
+  editRole,
+  setAuth2Role,
+  queryAuthByCode
 } from '@/api/role';
 
 const SAVE_ROLE = 'SAVE_ROLE';
@@ -11,6 +13,7 @@ const RESET_ROLE = 'RESET_ROLE';
 const SAVE_ROLE_PAGE = 'SAVE_ROLE_PAGE'
 const RESET_ROLE_DETAIL = 'RESET_ROLE_DETAIL';
 const SAVE_ROLE_DETAIL = 'SAVE_ROLE_DETAIL';
+const SAVE_AUTH_LIST = 'SAVE_AUTH_LIST'
 
 const baseDetail = {
   roleName: '',
@@ -29,7 +32,8 @@ const state = {
   total: 0,
   detail: {
     ...baseDetail
-  }
+  },
+  currentAuth: []
 }
 
 const getters = {
@@ -52,6 +56,9 @@ const mutations = {
   },
   [RESET_ROLE_DETAIL](state) {
     Object.assign(state.detail, baseDetail); 
+  },
+  [SAVE_AUTH_LIST](state, currentAuth) {
+    Object.assign(state, {currentAuth});
   }
 }
 
@@ -82,6 +89,18 @@ const actions = {
   async deleteRole({ dispatch }, id) {
     const response = await deleteRoleById(id);
     if(response && response.code !== 0) return;
+    dispatch('getPager');
+  },
+  async getCurrentAuth({commit}, {code, callback}) {
+    const response = await queryAuthByCode(code);
+    if(response && response.code !== 0) retursn;
+    commit(SAVE_AUTH_LIST, response.data);
+    callback && callback();
+  },
+  async setAuth({ dispatch }, { params, callback }) {
+    const response = await setAuth2Role(params);
+    if(response && response.code !== 0) return;
+    callback && callback();
     dispatch('getPager');
   }
 }

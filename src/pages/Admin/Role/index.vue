@@ -59,8 +59,8 @@
       width="190"
     >
       <template slot-scope="scope">
-        <span v-if="scope.row.updateTime" style='color: #67C23A'>{{scope.row.updateTime | formatDate}}</span>
-        <span v-else>-</span>
+        <span v-if="scope.row.updateTime" class="has-update">{{scope.row.updateTime | formatDate}}</span>
+        <span v-else>{{scope.row.createTime | formatDate}}</span>
       </template>
     </el-table-column>
     <el-table-column label="操作" width="270" fixed="right">
@@ -79,10 +79,35 @@
             size="mini"
             type="success"
             icon="el-icon-erp-safetycertificate"
-            @click="handleRole()">授 权</el-button>
+            @click="handleAuth(scope.row)">授 权</el-button>
       </template>
     </el-table-column>
   </standard-table>
+  <el-dialog
+    title="设置权限"
+    width="550px"
+    :visible.sync="visibleAuthDialog"
+  >
+    <el-tree
+      ref="authTree"
+      v-loading="authTreeFetching"
+      :data="authTree"
+      node-key="id"
+      show-checkbox
+      default-expand-all
+      class="auth-tree"
+      @check="handleAuthCheck"
+    >
+    </el-tree>
+    <div slot="footer">
+      <el-button 
+          type="primary" 
+          size="small" 
+          @click="handleSetAuth" 
+          :loading="authSubmitting">确 定</el-button>
+        <el-button size="small" @click="visibleAuthDialog=false">取 消</el-button>
+    </div>
+  </el-dialog>
   <el-dialog 
     :title="isAdd ? '新建角色' : '编辑角色'"  
     :visible.sync="visibleDialog" 
@@ -149,6 +174,8 @@
   import Icon from '@c/Icon';
   import { mapActions, mapState, mapMutations } from 'vuex';
   import { getLoadings } from '@tw666/vuex-loading';
+  import uniqWith from 'lodash/uniqWith';
+  import flattenDeep from 'lodash/flattenDeep';
   export default {
     name: 'RolePage',
     components: {
@@ -157,9 +184,14 @@
     },
     data() {
       return {
+        params: {
+          menuIds: [],
+          roleId: ''
+        },
         visibleTree: false,
         isAdd: true,
         visibleDialog: false,
+        visibleAuthDialog: false,
         searchForm: {
           roleName: ''
           /* deptId: '',
@@ -189,15 +221,21 @@
         deleting: loadings.action('role/deleteRole'),
         detailFetching: loadings.action('role/getDetail'),
         deptTreeFetching: loadings.action('dept/getDeptTree'),
-        submitting: loadings.action('role/addOrEditRole')
+        submitting: loadings.action('role/addOrEditRole'),
+        authTreeFetching: loadings.action(['auth/getAuth', 'role/getCurrentAuth']),
+        authSubmitting: loadings.action('role/setAuth')
       })),
       ...mapState('role',['detail']),
       ...mapState('dept', ['tree']),
-      ...mapState('role', ['role'])
+      ...mapState('role', ['role', 'currentAuth']),
+      ...mapState('auth', {
+        authTree: 'auth'
+      })
     },
     methods: {
-      ...mapActions('role', ['getPager',  'deleteRole', 'addOrEditRole', 'getDetail']),
+      ...mapActions('role', ['getPager',  'deleteRole', 'addOrEditRole', 'getDetail', 'getCurrentAuth', 'setAuth']),
       ...mapActions('dept', ['getDeptTree']),
+      ...mapActions('auth', ['getAuth']),
       ...mapMutations('role', {
         resetDetail(commit) {
           commit('RESET_ROLE_DETAIL');
@@ -205,6 +243,15 @@
       }),
       getPageByForm() {
         this.getPager(this.searchForm);
+      },
+      getCheckedKeys(trees, authKeys) {
+        return trees.map(tree => {
+          if(tree.children && tree.children.length >0) {
+            return this.getCheckedKeys(tree.children, authKeys);
+          } else {
+            return authKeys.filter(a => a === tree.id)
+          }
+        })
       },
       openDialog(isAdd) {
         this.isAdd = isAdd;
@@ -265,8 +312,41 @@
         Object.assign(this.detail, { deptName,roleDeptId });
         this.$refs.deptName.focus();
       },
-      handleRole() {
+      handleAuth(row) {
+        this.visibleAuthDialog = true;
+        const { roleCode: code } = row
+        this.getAuth(() => {
+          this.getCurrentAuth({
+            code,
+            callback: () => {
+              const checkedKeys = flattenDeep(this.getCheckedKeys(this.authTree, this.currentAuth));
+              this.$refs.authTree.setCheckedKeys(checkedKeys);
+            }
+          });
+        });
         
+        this.params.roleId = row.roleId;
+      },
+      handleAuthCheck(data, checked) {
+        const { checkedKeys } = checked;
+        this.params.menuIds = checkedKeys;
+      },
+      handleSetAuth() {
+        
+        const { params } = this;
+        const menuIds = [...this.currentAuth, ...this.params.menuIds, ...this.$refs.authTree.getHalfCheckedKeys()];
+        params.menuIds = uniqWith(menuIds).join();
+        
+        this.setAuth({
+          params,
+          callback: () => {
+            this.$message({
+              type: 'success',
+              message: '更新成功'
+            })
+            this.visibleAuthDialog = false;
+          }
+        })
       }
     }
   }
@@ -295,5 +375,8 @@
         margin: 0;
       }
     }
+  }
+  .has-update {
+    //color: #4a89dc;
   }
 </style>

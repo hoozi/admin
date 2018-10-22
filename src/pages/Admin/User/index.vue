@@ -57,12 +57,12 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="修改时间"
+      label="更新时间"
       width="190"
     >
       <template slot-scope="scope">
-        <span v-if="scope.row.updateTime">{{scope.row.updateTime | formatDate}}</span>
-        <span v-else>-</span>
+        <span v-if="scope.row.updateTime" class="has-update">{{scope.row.updateTime | formatDate}}</span>
+        <span v-else>{{scope.row.createTime | formatDate}}</span>
       </template>
     </el-table-column>
     <el-table-column label="操作" width="220" fixed="right">
@@ -368,5 +368,8 @@
         margin: 0;
       }
     }
+  }
+  .has-update {
+    //color: #4a89dc;
   }
 </style>

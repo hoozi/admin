@@ -140,3 +140,12 @@
     background: #fafafa;
   }
 }
+
+
+// tree
+
+.auth-tree {
+  .el-tree-node__children .el-tree-node__children .el-tree-node{
+    //display: inline-block
+  }
+}
